@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-    <html>
-    <head>
+<html>
+
+<head>
 
     <meta charset="UTF-8">
 
@@ -8,9 +9,16 @@
     <script src="paper-core.js"></script>
     <script src="paperscript.js"></script>
 
-    </head>
+</head>
 
-    <body>  
-        <canvas id="myCanvas" resize="true"></canvas>
-    </body>
+<body>
+    <canvas id="myCanvas" resize="true"></canvas>
+    <div id="loader">
+        <div class="lds-hourglass"></div>
+        <div id="loader-text">
+            <span>Rearranging to prevent intersections in connections...</span><span id="timeElapsed"></span>
+        </div>
+    </div>
+</body>
+
 </html>

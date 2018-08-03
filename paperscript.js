@@ -11,7 +11,7 @@ let connections = ["AB", "AC", "BD", "BE", "CG", "DF", "EG", "FG"];
 let rectBounds = ["leftCenter", "rightCenter", "topCenter", "bottomCenter"];
 
 let selectedItem = null;
-let movedItem = false;
+let hasMovedItem = false;
 let move_vector = null;
 
 let iterationCount = 0;
@@ -49,9 +49,9 @@ window.onload = function () {
 
         items.push(item);
 
-        item.onMouseDown = function (event) {
+        item.onMouseDown = function (event) {            
             makeSelection(event.currentTarget);
-
+            //get the vector between mouse point and item position
             move_vector = selectedItem.position.subtract(event.point);
         };
     }
@@ -62,33 +62,36 @@ window.onmouseup = function (event) {
     if (selectedItem) {
         selectionChange(items, selectedItem);
     }
-    if (movedItem) {
+    if (hasMovedItem) {
         removeMovedItem();
     }
-
+    //unassign selected item upon mouse up
     selectedItem = null;
 }
 
 window.onmousemove = function (event) {
+    // get movement vector of mouse
     movement_vector = new Point(event.movementX, event.movementY);
+    //check if mouse down event triggered and movement vector magnitude > 1
     if (selectedItem && movement_vector.length > 1) {
+        hasMovedItem = true;
         selectedItem.position = new Point(event.x, event.y).add(move_vector);
         makeConnections(items, connections);
         highlightNeighbours(items, selectedItem);
-        movedItem = true;
     }
 }
 
 window.ondblclick = function (event) {
-    // console.log("dblevent",event);
     if (event.target.id != "myCanvas") return;
     iterationStart = new Date();
+    // show loader
     document.getElementById("loader").style.visibility = "visible";
     intervalID = window.setInterval(function () {
         moveItems();
+        // get time elapsed
         let now = new Date();
         let timeElapsed = (now - iterationStart) / 1000
-        document.getElementById("timeElapsed").innerHTML = Math.round(timeElapsed) + "s";
+        document.getElementById("timeElapsed").innerHTML = iterationCount + " tries in " + Math.round(timeElapsed) + "s" ;
     }, 0);
 }
 
@@ -98,8 +101,7 @@ window.ondblclick = function (event) {
 
 function selectionChange(items, selectedItem) {
     if (selectedItem.firstChild.selected) {
-        if (!movedItem) {
-
+        if (!hasMovedItem) {
             selectedItem.firstChild.selected = false;
             unhighlightAll(items);
         }
@@ -135,7 +137,7 @@ function highlightNeighbours(items, selectedItem) {
 
     for (let i = 0; i < items.length; ++i) {
         if (items[i] == selectedItem) continue;
-        if (items[i].position.subtract(selectedItem.position).length < nearestDistance * 1.5) {
+        if (items[i].position.subtract(selectedItem.position).length <= nearestDistance*1.2) {
             items[i].firstChild.fillColor = "yellow";
         } else {
             items[i].firstChild.fillColor = "white";
@@ -149,7 +151,8 @@ function makeSelection(item) {
 }
 
 function removeMovedItem() {
-    movedItem = false;
+    //reset item moved variables
+    hasMovedItem = false;
     move_vector = null;
 }
 
@@ -285,7 +288,7 @@ function moveItems() {
         iterationCount = 0;
         return;
     }
-    console.log("count", ++iterationCount);
+    console.log("iterationCount", ++iterationCount);
 }
 
 function getSelectedIndex(items){

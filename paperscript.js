@@ -49,7 +49,7 @@ window.onload = function () {
 
         items.push(item);
 
-        item.onMouseDown = function (event) {            
+        item.onMouseDown = function (event) {
             makeSelection(event.currentTarget);
             //get the vector between mouse point and item position
             move_vector = selectedItem.position.subtract(event.point);
@@ -91,7 +91,7 @@ window.ondblclick = function (event) {
         // get time elapsed
         let now = new Date();
         let timeElapsed = (now - iterationStart) / 1000
-        document.getElementById("timeElapsed").innerHTML = iterationCount + " tries in " + Math.round(timeElapsed) + "s" ;
+        document.getElementById("timeElapsed").innerHTML = iterationCount + " tries in " + Math.round(timeElapsed) + "s";
     }, 0);
 }
 
@@ -136,12 +136,12 @@ function highlightNeighbours(items, selectedItem) {
     nearestDistance = nearestElement.position.subtract(selectedItem.position).length;
 
     for (let i = 0; i < items.length; ++i) {
-        if (items[i] == selectedItem) continue;
-        if (items[i].position.subtract(selectedItem.position).length <= nearestDistance*1.2) {
+        if (items[i].position.subtract(selectedItem.position).length <= nearestDistance * 1.2) {
             items[i].firstChild.fillColor = "yellow";
         } else {
             items[i].firstChild.fillColor = "white";
         }
+        selectedItem.firstChild.fillColor = "white";
     }
 }
 
@@ -279,10 +279,10 @@ function moveItems() {
     makeConnections(items, connections);
     if (!hasIntersections(getPathsGroup(items, paths))) {
         clearInterval(intervalID);
-        intervalID = null;        
+        intervalID = null;
         let selectedIndex = getSelectedIndex(items);
-        if(selectedIndex!=-1){
-            highlightNeighbours(items,items[selectedIndex]);
+        if (selectedIndex != -1) {
+            highlightNeighbours(items, items[selectedIndex]);
         }
         document.getElementById("loader").style.visibility = "hidden";
         iterationCount = 0;
@@ -291,9 +291,9 @@ function moveItems() {
     console.log("iterationCount", ++iterationCount);
 }
 
-function getSelectedIndex(items){
-    for(let i=0;i<items.length;i++){
-        if(items[i].selected) return i;
+function getSelectedIndex(items) {
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].selected) return i;
     }
     return -1;
 }
